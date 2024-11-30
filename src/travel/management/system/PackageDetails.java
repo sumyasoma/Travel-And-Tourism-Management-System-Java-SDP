@@ -9,19 +9,23 @@ import java.sql.*;
 public class PackageDetails extends JPanel implements ActionListener {
     
     JLabel l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11;
-    JButton b1, b2, b3; // Added b3 for "Delete Package"
+    JButton b1, b2, b3; // "Delete Package" button
     JPanel panel, panel1;
     JTextArea ta1;
     public AdminHome a;
     public CustomerHome c;
     String place, user;
-    
+
+    // Constructor for Admin Panel
     PackageDetails(AdminHome a, String place) {
         this();
         this.a = a;
         this.place = place;
         display();
+        b3.setVisible(true); // Show "Delete Package" button
     }
+
+    // Constructor for Customer Panel
     PackageDetails(CustomerHome c, String place, String user) {
         this();
         this.c = c;
@@ -29,8 +33,10 @@ public class PackageDetails extends JPanel implements ActionListener {
         this.user = user;
         b1.setText("Book Package");
         display();
+        b3.setVisible(false); // Hide "Delete Package" button
     }
-    
+
+    // Common Constructor
     PackageDetails() {
         setBorder(new EmptyBorder(0, 0, 0, 0));
         setBackground(Color.WHITE);
@@ -116,6 +122,7 @@ public class PackageDetails extends JPanel implements ActionListener {
         b3.setBounds(950, 120, 140, 30);
         panel.add(b3);
         b3.addActionListener(this);
+        b3.setVisible(false); // Default to hidden
     }
 
     public void display() {

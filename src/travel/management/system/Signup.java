@@ -132,7 +132,11 @@ public class Signup extends JPanel implements ActionListener {
             Conn con = new Conn();
 
             if (ae.getSource() == b1) {
+                String username = t1.getText().trim();
+                String name = t2.getText();
                 String password = t3.getText();
+                String securityQuestion = (String) c1.getSelectedItem();
+                String answer = t4.getText();
 
                 // Validate the password
                 if (!PasswordChecker.isIdealPassword(password)) {
@@ -144,15 +148,15 @@ public class Signup extends JPanel implements ActionListener {
                 String sql = "INSERT INTO account(username, name, password, security, answer) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement st = con.c.prepareStatement(sql);
 
-                st.setString(1, t1.getText());
-                st.setString(2, t2.getText());
+                st.setString(1, username);
+                st.setString(2, name);
                 st.setString(3, password);
-                st.setString(4, (String) c1.getSelectedItem());
-                st.setString(5, t4.getText());
+                st.setString(4, securityQuestion);
+                st.setString(5, answer);
 
                 String pr = "SELECT * FROM account WHERE username=?";
                 PreparedStatement st1 = con.c.prepareStatement(pr);
-                st1.setString(1, t1.getText());
+                st1.setString(1, username);
 
                 ResultSet rs = st1.executeQuery();
                 if (rs.next()) {
