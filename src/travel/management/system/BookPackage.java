@@ -10,17 +10,16 @@ import java.sql.*;
 public class BookPackage extends JFrame implements ActionListener {
 
     JPanel headerpanel;
-    JTextField t1, t2, t3, t4, t5, t6, t7;
+    JTextField t1, t2, t3, t4, t5;
     JLabel l1, l2, l3, l4, l5, l6, l7, l8, l9;
     JButton b1, b2;
-    JDateChooser dateChooser;
+    JDateChooser startDateChooser, endDateChooser;
     String place, user;
 
     public BookPackage(String place, String user) {
-
         this.place = place;
         this.user = user;
-        setSize(750, 545);
+        setSize(750, 600); // Increased height to accommodate the buttons at the bottom
         setLocationRelativeTo(null);
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -63,15 +62,20 @@ public class BookPackage extends JFrame implements ActionListener {
         l6.setBounds(60, 280, 200, 40);
         add(l6);
 
-        l7 = new JLabel("Date: ");
+        l7 = new JLabel("Start Date: ");
         l7.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
         l7.setBounds(60, 330, 200, 40);
         add(l7);
 
-        l8 = new JLabel("Total Price: ");
+        l8 = new JLabel("End Date: ");
         l8.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
         l8.setBounds(60, 380, 200, 40);
         add(l8);
+
+        l9 = new JLabel("Total Price: ");
+        l9.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
+        l9.setBounds(60, 430, 200, 40);
+        add(l9);
 
         t1 = new JTextField();
         t1.setForeground(Color.DARK_GRAY);
@@ -111,26 +115,29 @@ public class BookPackage extends JFrame implements ActionListener {
         t5.setBounds(270, 280, 380, 40);
         add(t5);
 
-        dateChooser = new JDateChooser();
-        dateChooser.setBounds(270, 330, 380, 40);
-        add(dateChooser);
+        startDateChooser = new JDateChooser();
+        startDateChooser.setBounds(270, 330, 380, 40);
+        add(startDateChooser);
 
-        l9 = new JLabel();
-        l9.setFont(new Font("Segoe UI Emoji", Font.BOLD, 18));
-        l9.setBounds(270, 380, 380, 40);
-        l9.setForeground(Color.BLUE);
-        l9.setBackground(Color.WHITE);
+        endDateChooser = new JDateChooser();
+        endDateChooser.setBounds(270, 380, 380, 40);
+        add(endDateChooser);
+
+        // Set up the label for "Total Price"
+        l9 = new JLabel("000000");
+        l9.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
+        l9.setBounds(270, 430, 380, 40);
         add(l9);
 
         try {
             Conn conn = new Conn();
-            PreparedStatement ps = conn.c.prepareStatement("select *from package where place='" + place + "'");
+            PreparedStatement ps = conn.c.prepareStatement("SELECT * FROM package WHERE place='" + place + "'"); 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 t1.setText(rs.getString("place"));
                 t4.setText(rs.getString("price"));
             }
-            PreparedStatement ps1 = conn.c.prepareStatement("select *from customer where username='" + user + "'");
+            PreparedStatement ps1 = conn.c.prepareStatement("SELECT * FROM customer WHERE username='" + user + "'");
             ResultSet rs1 = ps1.executeQuery();
             if (rs1.next()) {
                 t2.setText(rs1.getString("name"));
@@ -145,7 +152,7 @@ public class BookPackage extends JFrame implements ActionListener {
         b1.setFont(new Font("Segoe UI", Font.BOLD, 15));
         b1.addActionListener(this);
         b1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b1.setBounds(578, 455, 140, 38);
+        b1.setBounds(520, 485, 160, 40); // Adjusted position and size
         b1.setFocusable(false);
         add(b1);
 
@@ -156,7 +163,7 @@ public class BookPackage extends JFrame implements ActionListener {
         b2.setFont(new Font("Segoe UI", Font.BOLD, 15));
         b2.addActionListener(this);
         b2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b2.setBounds(427, 455, 140, 38);
+        b2.setBounds(350, 485, 160, 40); // Adjusted position and size
         b2.setFocusable(false);
         add(b2);
     }
@@ -164,32 +171,52 @@ public class BookPackage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == b1) {
             try {
-                Conn conn = new Conn();
-                String sql = "insert into bookpackage values(?, ?, ?, ?, ?, ?)";
-                PreparedStatement ps = conn.c.prepareStatement(sql);
-                ps.setString(1, t1.getText());
-                ps.setString(2, t2.getText());
-                ps.setString(3, t3.getText());
-                ps.setString(4, t5.getText());
-                ps.setString(5, ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText());
-                ps.setString(6, l9.getText());
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Package Booked Successfully");
-                this.dispose();
-            } catch (Exception e1) {}
+                // Get the total price after calculating
+                double person = Double.parseDouble(t5.getText());
+                double cost = Double.parseDouble(t4.getText());
+                double totalCost = cost * person;
+
+                if (totalCost > 0) {
+                    // Update Total Price Label
+                    l9.setText("" + String.format("%.2f", totalCost));
+
+                    // Insert the booking into the database
+                    Conn conn = new Conn();
+                    String sql = "INSERT INTO bookpackage (place, name, username, persons, date, end_date, totalprice) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement ps = conn.c.prepareStatement(sql);
+                    ps.setString(1, t1.getText()); // Place
+                    ps.setString(2, t2.getText()); // Name
+                    ps.setString(3, t3.getText()); // Username
+                    ps.setString(4, t5.getText()); // Persons
+                    ps.setString(5, ((JTextField) startDateChooser.getDateEditor().getUiComponent()).getText()); // Start Date
+                    ps.setString(6, ((JTextField) endDateChooser.getDateEditor().getUiComponent()).getText()); // End Date
+                    ps.setString(7, String.format("%.2f", totalCost)); // Total Price
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Package Booked Successfully");
+                    this.dispose();
+                } else {
+                    l9.setText("Enter valid number of persons.");
+                }
+            } catch (NumberFormatException e1) {
+                l9.setText("Invalid input for number of persons.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         if (ae.getSource() == b2) {
             try {
-                double person = Double.parseDouble(t4.getText());
-                double cost = Double.parseDouble(t5.getText());
+                double person = Double.parseDouble(t5.getText());
+                double cost = Double.parseDouble(t4.getText());
                 double totalCost = cost * person;
                 if (totalCost > 0) {
-                    l9.setText(String.format("%.2f", totalCost)); 
+                    l9.setText("" + String.format("%.2f", totalCost));
                 } else {
-                    l9.setText("Please enter a valid number!!!");
+                    l9.setText("Enter valid number of persons.");
                 }
             } catch (NumberFormatException e) {
-                l9.setText("Please enter valid numbers!");
+                l9.setText("Invalid input for number of persons.");
             }
         }
     }
