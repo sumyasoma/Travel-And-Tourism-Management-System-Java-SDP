@@ -10,16 +10,17 @@ import java.sql.*;
 public class BookPackage extends JFrame implements ActionListener {
 
     JPanel headerpanel;
-    JTextField t1, t2, t3, t4, t5;
+    JTextField t1, t2, t3, t4;
     JLabel l1, l2, l3, l4, l5, l6, l7, l8, l9;
     JButton b1, b2;
     JDateChooser startDateChooser, endDateChooser;
+    JSpinner spinnerPersons;
     String place, user;
 
     public BookPackage(String place, String user) {
         this.place = place;
         this.user = user;
-        setSize(750, 600); // Increased height to accommodate the buttons at the bottom
+        setSize(750, 600);
         setLocationRelativeTo(null);
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -109,11 +110,13 @@ public class BookPackage extends JFrame implements ActionListener {
         t4.setBounds(270, 230, 380, 40);
         add(t4);
 
-        t5 = new JTextField();
-        t5.setForeground(Color.DARK_GRAY);
-        t5.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
-        t5.setBounds(270, 280, 380, 40);
-        add(t5);
+        spinnerPersons = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1)); // Min = 1, Max = 100, Step = 1
+        spinnerPersons.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
+        spinnerPersons.setBounds(270, 280, 380, 40);
+        JComponent editor = spinnerPersons.getEditor();
+        JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
+        textField.setHorizontalAlignment(SwingConstants.LEFT); // Align to the start
+        add(spinnerPersons);
 
         startDateChooser = new JDateChooser();
         startDateChooser.setBounds(270, 330, 380, 40);
@@ -123,7 +126,6 @@ public class BookPackage extends JFrame implements ActionListener {
         endDateChooser.setBounds(270, 380, 380, 40);
         add(endDateChooser);
 
-        // Set up the label for "Total Price"
         l9 = new JLabel("000000");
         l9.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
         l9.setBounds(270, 430, 380, 40);
@@ -131,7 +133,7 @@ public class BookPackage extends JFrame implements ActionListener {
 
         try {
             Conn conn = new Conn();
-            PreparedStatement ps = conn.c.prepareStatement("SELECT * FROM package WHERE place='" + place + "'"); 
+            PreparedStatement ps = conn.c.prepareStatement("SELECT * FROM package WHERE place='" + place + "'");
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 t1.setText(rs.getString("place"));
@@ -143,27 +145,29 @@ public class BookPackage extends JFrame implements ActionListener {
                 t2.setText(rs1.getString("name"));
                 t3.setText(rs1.getString("username"));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         b1 = new JButton("Book");
         b1.setBorder(new EmptyBorder(0, 0, 0, 0));
-        b1.setForeground(new Color(255, 255, 255));
+        b1.setForeground(Color.WHITE);
         b1.setBackground(new Color(32, 178, 170));
         b1.setFont(new Font("Segoe UI", Font.BOLD, 15));
         b1.addActionListener(this);
         b1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b1.setBounds(520, 485, 160, 40); // Adjusted position and size
+        b1.setBounds(520, 485, 160, 40);
         b1.setFocusable(false);
         add(b1);
 
         b2 = new JButton("Check Price");
         b2.setBorder(new EmptyBorder(0, 0, 0, 0));
-        b2.setForeground(new Color(255, 255, 255));
+        b2.setForeground(Color.WHITE);
         b2.setBackground(new Color(32, 178, 170));
         b2.setFont(new Font("Segoe UI", Font.BOLD, 15));
         b2.addActionListener(this);
         b2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b2.setBounds(350, 485, 160, 40); // Adjusted position and size
+        b2.setBounds(350, 485, 160, 40);
         b2.setFocusable(false);
         add(b2);
     }
@@ -171,26 +175,23 @@ public class BookPackage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == b1) {
             try {
-                // Get the total price after calculating
-                double person = Double.parseDouble(t5.getText());
+                int person = (Integer) spinnerPersons.getValue();
                 double cost = Double.parseDouble(t4.getText());
                 double totalCost = cost * person;
 
                 if (totalCost > 0) {
-                    // Update Total Price Label
                     l9.setText("" + String.format("%.2f", totalCost));
 
-                    // Insert the booking into the database
                     Conn conn = new Conn();
                     String sql = "INSERT INTO bookpackage (place, name, username, persons, date, end_date, totalprice) VALUES (?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement ps = conn.c.prepareStatement(sql);
-                    ps.setString(1, t1.getText()); // Place
-                    ps.setString(2, t2.getText()); // Name
-                    ps.setString(3, t3.getText()); // Username
-                    ps.setString(4, t5.getText()); // Persons
-                    ps.setString(5, ((JTextField) startDateChooser.getDateEditor().getUiComponent()).getText()); // Start Date
-                    ps.setString(6, ((JTextField) endDateChooser.getDateEditor().getUiComponent()).getText()); // End Date
-                    ps.setString(7, String.format("%.2f", totalCost)); // Total Price
+                    ps.setString(1, t1.getText());
+                    ps.setString(2, t2.getText());
+                    ps.setString(3, t3.getText());
+                    ps.setInt(4, person);
+                    ps.setString(5, ((JTextField) startDateChooser.getDateEditor().getUiComponent()).getText());
+                    ps.setString(6, ((JTextField) endDateChooser.getDateEditor().getUiComponent()).getText());
+                    ps.setString(7, String.format("%.2f", totalCost));
                     ps.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "Package Booked Successfully");
@@ -207,16 +208,17 @@ public class BookPackage extends JFrame implements ActionListener {
 
         if (ae.getSource() == b2) {
             try {
-                double person = Double.parseDouble(t5.getText());
+                int person = (Integer) spinnerPersons.getValue();
                 double cost = Double.parseDouble(t4.getText());
                 double totalCost = cost * person;
+
                 if (totalCost > 0) {
                     l9.setText("" + String.format("%.2f", totalCost));
                 } else {
                     l9.setText("Enter valid number of persons.");
                 }
-            } catch (NumberFormatException e) {
-                l9.setText("Invalid input for number of persons.");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
