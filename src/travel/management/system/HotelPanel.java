@@ -121,7 +121,7 @@ public class HotelPanel extends JPanel implements ActionListener{
 	{
             try{
                  Conn conn = new Conn();
-                 String sql = "select name as 'Hotel Name',state as 'City/State Name',ac as 'AC Cost Per Day',food as 'Food Cost Per Day',hotelcost as 'Hotel Cost Per Day' from hotel" ;
+                 String sql = "select name as 'Hotel Name',state as 'City/State Name',ac as 'Hotel Cost AC',food as 'Food Cost Per Day',hotelcost as 'Hotel Cost Non-AC' from hotel" ;
                  PreparedStatement ps = conn.c.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery();
 		 if(rs!=null){

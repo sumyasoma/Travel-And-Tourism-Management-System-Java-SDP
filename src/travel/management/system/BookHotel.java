@@ -53,7 +53,7 @@ public class BookHotel extends JFrame implements ActionListener {
         l4.setBounds(60, 180, 200, 40);
         add(l4);
 
-        l5 = new JLabel("AC Cost Per Day: ");
+        l5 = new JLabel("Hotel Cost AC: ");
         l5.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
         l5.setBounds(60, 230, 200, 40);
         add(l5);
@@ -63,7 +63,7 @@ public class BookHotel extends JFrame implements ActionListener {
         l6.setBounds(60, 280, 200, 40);
         add(l6);
 
-        l7 = new JLabel("Hotel Cost Per Day: ");
+        l7 = new JLabel("Hotel Cost Non-AC: ");
         l7.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
         l7.setBounds(60, 330, 200, 40);
         add(l7);

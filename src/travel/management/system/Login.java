@@ -6,14 +6,15 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class Login extends JPanel implements ActionListener {
-    
-    JPanel p1, p2;
+
+    JPanel p1;
     JTextField t1;
     JPasswordField passwordField;
     JCheckBox showPassword;
     JButton b1, b2, b3;
     Home home;
     JLabel l5;
+    JLabel background;
 
     Login() {
 
@@ -21,87 +22,119 @@ public class Login extends JPanel implements ActionListener {
         setBackground(new Color(240, 248, 255)); // Light blue background
         setLayout(null);
 
+        // Setting the background image
+        updateBackgroundImage();
+
         p1 = new JPanel();
-        p1.setBackground(new Color(255, 239, 213)); // Peach puff
-        p1.setBounds(440, 230, 360, 320);
+        p1.setBackground(new Color(255, 239, 213, 100)); // Peach puff with transparency
+        p1.setBounds(540, 200, 460, 400); // Adjusted position and size
         p1.setLayout(null);
         p1.setBorder(BorderFactory.createLineBorder(new Color(205, 92, 92), 2)); // Dark red border
-        add(p1);
+        background.add(p1);
 
-        p2 = new JPanel();
-        p2.setBounds(850, 220, 300, 300);
-        p2.setBackground(new Color(255, 248, 220)); // Cornsilk
-        p2.setLayout(null);
-        p2.setBorder(BorderFactory.createLineBorder(new Color(46, 139, 87), 2)); // Green border
-        add(p2);
-
-        JLabel l1 = new JLabel("Username");
-        l1.setBounds(30, 20, 100, 25);
+        JLabel l1 = new JLabel("Username:");
+        l1.setBounds(90, 50, 100, 25);
         l1.setFont(new Font("SansSerif", Font.BOLD, 16));
         l1.setForeground(new Color(70, 130, 180)); // Steel blue
         p1.add(l1);
 
-        JLabel l2 = new JLabel("Password");
-        l2.setBounds(30, 90, 100, 25);
+        JLabel l2 = new JLabel("Password:");
+        l2.setBounds(90, 120, 100, 25);
         l2.setFont(new Font("SansSerif", Font.BOLD, 16));
         l2.setForeground(new Color(70, 130, 180)); // Steel blue
         p1.add(l2);
 
-        t1 = new JTextField();
-        t1.setBounds(30, 55, 280, 25);
-        t1.setBorder(BorderFactory.createLineBorder(new Color(176, 196, 222), 1)); // Light steel blue
+        t1 = new JTextField() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque()) {
+                    int w = getWidth();
+                    int h = getHeight();
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Transparency level
+                    g2.setColor(getBackground());
+                    g2.fillRect(0, 0, w, h);
+                    g2.dispose();
+                }
+                super.paintComponent(g);
+            }
+
+            @Override
+            public boolean isOpaque() {
+                return false;
+            }
+        };
+        t1.setBackground(new Color(255, 255, 255));
+        t1.setBounds(90, 75, 280, 25);
         t1.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        t1.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2)); // Steel blue border with thickness 2
         p1.add(t1);
 
-        passwordField = new JPasswordField();
-        passwordField.setBounds(30, 125, 280, 25);
-        passwordField.setBorder(BorderFactory.createLineBorder(new Color(176, 196, 222), 1)); // Light steel blue
+        passwordField = new JPasswordField() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque()) {
+                    int w = getWidth();
+                    int h = getHeight();
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setComposite(AlphaComposite.SrcOver.derive(0.5f)); // Transparency level
+                    g2.setColor(getBackground());
+                    g2.fillRect(0, 0, w, h);
+                    g2.dispose();
+                }
+                super.paintComponent(g);
+            }
+
+            @Override
+            public boolean isOpaque() {
+                return false;
+            }
+        };
+        passwordField.setBackground(new Color(255, 255, 255));
+        passwordField.setBounds(90, 145, 280, 25);
         passwordField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        passwordField.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2)); // Steel blue border with thickness 2
         p1.add(passwordField);
 
         // Show Password Checkbox
         showPassword = new JCheckBox("Show Password");
-        showPassword.setBounds(30, 155, 150, 25);
-        showPassword.setBackground(new Color(255, 239, 213)); // Peach puff background
+        showPassword.setBounds(90, 175, 150, 25);
+        showPassword.setBackground(new Color(255, 239, 213, 100)); // Peach puff with transparency
         showPassword.setFont(new Font("SansSerif", Font.ITALIC, 12));
         showPassword.setFocusPainted(false);
         showPassword.addActionListener(this);
         p1.add(showPassword);
 
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("Travel/Management/System/icons/login.jpg"));
-        Image i2 = i1.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-        ImageIcon i3 = new ImageIcon(i2);
-        JLabel l3 = new JLabel(i3);
-        l3.setBounds(0, 0, 300, 300);
-        p2.add(l3);
-
         l5 = new JLabel("LOGIN");
-        l5.setBounds(600, 160, 400, 50);
+        l5.setBounds(560, 130, 240, 50); // Adjusted position for better visibility
         l5.setFont(new Font("Times New Roman", Font.BOLD, 42));
         l5.setForeground(new Color(138, 43, 226)); // Blue Violet
-        add(l5);
+        background.add(l5);
 
         b1 = new JButton("Login");
-        b1.setBounds(30, 190, 120, 30);
-        b1.setBackground(new Color(135, 206, 250)); // Sky blue
-        b1.setForeground(new Color(25, 25, 112)); // Midnight blue
+        b1.setBounds(90, 210, 120, 30);
+        b1.setBackground(new Color(100, 149, 237)); // Cornflower blue
+        b1.setForeground(Color.WHITE);
         b1.setFont(new Font("SansSerif", Font.BOLD, 14));
+        b1.setBorder(BorderFactory.createEmptyBorder());
         b1.addActionListener(this);
         p1.add(b1);
 
         b2 = new JButton("Sign Up");
-        b2.setBounds(190, 190, 120, 30);
-        b2.setBackground(new Color(240, 128, 128)); // Light coral
+        b2.setBounds(250, 210, 120, 30);
+        b2.setBackground(new Color(60, 179, 113)); // Medium sea green
         b2.setForeground(Color.WHITE);
         b2.setFont(new Font("SansSerif", Font.BOLD, 14));
+        b2.setBorder(BorderFactory.createEmptyBorder());
         b2.addActionListener(this);
         p1.add(b2);
 
         b3 = new JButton("Forgot Password?");
-        b3.setBounds(100, 240, 160, 30);
-        b3.setBackground(new Color(255, 160, 122)); // Light salmon
-        b3.setForeground(new Color(139, 69, 19)); // Saddle brown
+        b3.setBounds(160, 260, 160, 30);
+        b3.setBackground(new Color(255, 140, 0)); // Dark orange
+        b3.setForeground(Color.WHITE);
         b3.setFont(new Font("SansSerif", Font.BOLD, 12));
+        b3.setBorder(BorderFactory.createEmptyBorder());
         b3.addActionListener(this);
         p1.add(b3);
     }
@@ -141,21 +174,37 @@ public class Login extends JPanel implements ActionListener {
             }
         } else if (ae.getSource() == b2) {
             Signup s = new Signup();
-            l5.setVisible(false);
-            p1.setVisible(false);
-            p2.setVisible(false);
-            s.setFocusable(true);
+            this.removeAll();
             this.add(s);
             s.setVisible(true);
+            revalidate();
+            repaint();
 
         } else if (ae.getSource() == b3) {
             ForgotPassword f = new ForgotPassword();
-            l5.setVisible(false);
-            p1.setVisible(false);
-            p2.setVisible(false);
-            f.setFocusable(true);
+            this.removeAll();
             this.add(f);
             f.setVisible(true);
+            revalidate();
+            repaint();
         }
+    }
+
+    private void updateBackgroundImage() {
+        ImageIcon originalIcon = new ImageIcon(ClassLoader.getSystemResource("Travel/Management/System/icons/logins.jpg"));
+        Image originalImage = originalIcon.getImage();
+        Image scaledImage = originalImage.getScaledInstance(1540, 800, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        background = new JLabel(scaledIcon);
+        background.setBounds(0, 0, 1540, 800);
+        setLayout(null);
+        add(background);
+    }
+
+    public void resetBackgroundImage() {
+        removeAll();
+        updateBackgroundImage();
+        revalidate();
+        repaint();
     }
 }

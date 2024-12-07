@@ -11,9 +11,14 @@ public class CustomerHome extends JFrame implements ActionListener {
     public JPanel contentPane;
     public JPanel profilepanel;
 
-    private final Color buttonbcolor = Color.DARK_GRAY;
-    private final Color buttonfcolor = Color.LIGHT_GRAY;
-    private final Font buttonfont = new Font("Tw Cen MT", Font.PLAIN, 20);
+    private final Color buttonbcolor = new Color(70, 130, 180); // Steel Blue
+    private final Color buttonbcolorHover = new Color(100, 149, 237); // Cornflower Blue
+    private final Color buttonfcolor = Color.WHITE;
+    private final Font buttonfont = new Font("SansSerif", Font.PLAIN, 18);
+
+    private final Color sidebarColor = new Color(52, 73, 94); // Dark Blue-Gray
+    private final Color profileBgColor = new Color(30, 30, 80); // Slightly Darker Blue
+    private final Color buttonActiveFontColor = new Color(140, 230, 167); // #56C1FE
 
     JButton b1, b2, b3, b4, b5, b6, b7, btn;
     JLabel l1;
@@ -39,7 +44,6 @@ public class CustomerHome extends JFrame implements ActionListener {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // R
         try {
             Conn conn = new Conn();
             PreparedStatement ps = conn.c.prepareStatement("select * from account where username='" + user + "'");
@@ -58,7 +62,7 @@ public class CustomerHome extends JFrame implements ActionListener {
 
         profilepanel = new JPanel();
         profilepanel.setBounds(5, 7, 240, 63);
-        profilepanel.setBackground(Color.DARK_GRAY);
+        profilepanel.setBackground(profileBgColor);
         profilepanel.setLayout(null);
         contentPane.add(profilepanel);
 
@@ -66,9 +70,7 @@ public class CustomerHome extends JFrame implements ActionListener {
         l1.setForeground(Color.WHITE);
         l1.setHorizontalAlignment(SwingConstants.CENTER);
         l1.setOpaque(true);
-        l1.setBackground(Color.DARK_GRAY);
-
-        // 
+        l1.setBackground(profileBgColor);
         l1.setFont(new Font("Tw Cen MT", Font.BOLD, 25));
         adjustLabelFont(l1, profilepanel.getWidth());
         l1.setBounds(0, 14, 240, 36);
@@ -77,7 +79,7 @@ public class CustomerHome extends JFrame implements ActionListener {
         createHomepanel();
 
         JPanel sidebarpanel = new JPanel();
-        sidebarpanel.setBackground(Color.DARK_GRAY);
+        sidebarpanel.setBackground(sidebarColor); // Updated sidebar color
         sidebarpanel.setBounds(5, 75, 240, 714);
         contentPane.add(sidebarpanel);
         sidebarpanel.setLayout(null);
@@ -89,16 +91,16 @@ public class CustomerHome extends JFrame implements ActionListener {
         b2 = createButton("Your Profile");
         sidebarpanel.add(b2);
 
-        b3 = createButton("Package");
+        b3 = createButton("Travel Packages");
         sidebarpanel.add(b3);
 
-        b4 = createButton("Hotel");
+        b4 = createButton("Hotels");
         sidebarpanel.add(b4);
 
-        b5 = createButton("Booked Package");
+        b5 = createButton("Booked Packages");
         sidebarpanel.add(b5);
 
-        b6 = createButton("Booked hotel");
+        b6 = createButton("Booked hotels");
         sidebarpanel.add(b6);
 
         b7 = createButton("LogOut");
@@ -119,25 +121,44 @@ public class CustomerHome extends JFrame implements ActionListener {
         btn.setBackground(buttonbcolor);
         btn.setForeground(buttonfcolor);
         btn.setFont(buttonfont);
+        btn.setBorder(new LineBorder(buttonfcolor, 1)); // Reset the previous button's border
         btn = button;
-        btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Tw Cen MT", Font.BOLD, 23));
+        btn.setForeground(buttonActiveFontColor); // Set active button font color
+        btn.setFont(new Font("SansSerif", Font.BOLD, 20));
+        btn.setBorder(new LineBorder(new Color(41, 128, 185), 2)); // Add a thicker border for the active button
         disablePanel();
     }
 
     public JButton createButton(String text) {
         JButton button = new JButton(text);
         button.setForeground(buttonfcolor);
-        button.setFont(buttonfont);
+        button.setFont(new Font(buttonfont.getFontName(), buttonfont.getStyle(), buttonfont.getSize() + 2)); // Increase font size
         button.setBackground(buttonbcolor);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setFocusable(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setBorder(new EmptyBorder(0, 0, 0, 0));
+        button.setBorder(new LineBorder(buttonfcolor, 1)); // Add light gray border
         button.addActionListener(this);
+
         button.setLocation(0, row);
-        button.setSize(234, 40);
-        row += 40;
+        button.setSize(234, 50); // Increased height of the button
+        row += 50; // Increase the space between buttons
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(buttonbcolorHover);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (button != btn) { // Reset background and border only if not the active button
+                    button.setBackground(buttonbcolor);
+                    button.setBorder(new LineBorder(buttonfcolor, 1));
+                }
+            }
+        });
+
         return button;
     }
 
@@ -212,7 +233,6 @@ public class CustomerHome extends JFrame implements ActionListener {
         }
     }
 
-    // 
     private void adjustLabelFont(JLabel label, int maxWidth) {
         Font labelFont = label.getFont();
         String text = label.getText();
