@@ -83,22 +83,11 @@ public class AddHotel extends JFrame implements ActionListener {
         add(filename);
     }
 
-    /**
-     * Overloaded constructor for adding a new hotel with HotelPanel reference.
-     * 
-     * @param hp HotelPanel instance to refresh the table after adding.
-     */
     public AddHotel(HotelPanel hp) {
         this();
         this.hp = hp;
     }
 
-    /**
-     * Overloaded constructor for editing an existing hotel.
-     * 
-     * @param hd   HotelDetails instance to refresh the display after updating.
-     * @param name Name of the hotel to be edited.
-     */
     public AddHotel(HotelDetails hd, String name) {
         this();
         this.hd = hd;
@@ -141,14 +130,7 @@ public class AddHotel extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * Helper method to create labels.
-     * 
-     * @param text The text for the label.
-     * @param x    The x-coordinate.
-     * @param y    The y-coordinate.
-     * @return The created JLabel.
-     */
+
     private JLabel createLabel(String text, int x, int y) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -157,13 +139,6 @@ public class AddHotel extends JFrame implements ActionListener {
         return label;
     }
 
-    /**
-     * Helper method to create text fields.
-     * 
-     * @param x The x-coordinate.
-     * @param y The y-coordinate.
-     * @return The created JTextField.
-     */
     private JTextField createTextField(int x, int y) {
         JTextField textField = new JTextField();
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -175,15 +150,7 @@ public class AddHotel extends JFrame implements ActionListener {
         return textField;
     }
 
-    /**
-     * Helper method to create buttons.
-     * 
-     * @param text     The text for the button.
-     * @param x        The x-coordinate.
-     * @param y        The y-coordinate.
-     * @param colorHex The background color in hex format.
-     * @return The created JButton.
-     */
+
     private JButton createButton(String text, int x, int y, String colorHex) {
         JButton button = new JButton(text);
         button.setForeground(Color.WHITE);
@@ -347,7 +314,7 @@ public class AddHotel extends JFrame implements ActionListener {
      * Main method for testing the AddHotel class independently.
      */
     public static void main(String[] args) {
-        // For testing purposes: Launch the AddHotel window in add mode
+        // For testing purposes: Launch the AddHotel
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new AddHotel().setVisible(true);

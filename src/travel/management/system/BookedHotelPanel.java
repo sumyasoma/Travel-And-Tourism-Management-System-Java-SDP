@@ -126,8 +126,7 @@ public class BookedHotelPanel extends JPanel {
                 frame.setLayout(new BorderLayout());
 
                 // Create an instance of the BookedHotelPanel (you can change the user parameter here)
-                BookedHotelPanel panel = new BookedHotelPanel(); // For all users, or
-                // BookedHotelPanel panel = new BookedHotelPanel("username"); // For a specific user
+                BookedHotelPanel panel = new BookedHotelPanel();
 
                 // Add the BookedHotelPanel to the frame
                 frame.add(panel, BorderLayout.CENTER);
