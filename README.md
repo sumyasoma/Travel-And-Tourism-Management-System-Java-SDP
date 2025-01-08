@@ -1,7 +1,6 @@
 # Travel-And-Tourism-Management-System-Java-SDP
 
-I And My wife as a Contributor
-- [Username](https://github.com/sumyasoma)
+I And My wife - [Sumya Soma](https://github.com/sumyasoma)
  
 developed this "Travel And Tourism Management System" as a Desktop application project using Java Swing and AWT.!
 
