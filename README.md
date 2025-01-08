@@ -1,4 +1,7 @@
-# Travel-And-Tourism-Management-System
-# I developed "Travel And Tourism Management System" Desktop application project using java swing and awt...!
+# Travel-And-Tourism-Management-System-Java-SDP
 
-For Any Queries Of this Project feel free to knock me on facebook or my mail given on my profile. 💕
+I developed "Travel And Tourism Management System" as a Desktop application project using Java Swing and AWT.
+
+For any queries about this project, feel free to contact me on Facebook or via email as given on my profile. 💕
+
+Check out the Master Branch for the project details.
